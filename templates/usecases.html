@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>Sus-Detector | Use Cases</title>
+    <meta
+      content="Real-world phishing attack examples and case studies"
+      name="description"
+    />
+    <meta
+      content="phishing cases, data breaches, cybersecurity examples"
+      name="keywords"
+    />
+
+    <!-- Favicons -->
+    <link href="static/assets/img/hacker_1.jpg" rel="icon" />
+    <link href="static/assets/img/hacker_1.jpg" rel="apple-touch-icon" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Enhanced CSS -->
+    <link href="static/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- Dark/Light Mode Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+      <i class="fas fa-sun" id="themeIcon"></i>
+    </div>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="glass-header">
+      <nav class="navbar">
+        <div class="nav-container">
+          <div class="nav-logo">
+            <h1><a href="{{ url_for('home') }}">Sus-Detector</a></h1>
+          </div>
+
+          <div class="nav-menu" id="navMenu">
+            <ul class="nav-list">
+              <li class="nav-item">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                <a onclick="scrolldiv()" class="nav-link">About</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('usecases') }}" class="nav-link active"
+                  >Use Cases</a
+                >
+              </li>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle"
+                  >Help <i class="fas fa-chevron-down"></i
+                ></a>
+                <div class="dropdown-menu glass-card">
+                  <div class="dropdown-section">
+                    <h4>Report Phishing</h4>
+                    <a
+                      href="https://safebrowsing.google.com/safebrowsing/report_phish/?hl=en"
+                      target="_blank"
+                      >Google Safe Browsing</a
+                    >
+                    <a
+                      href="https://support.google.com/websearch/answer/106318"
+                      target="_blank"
+                      >Google Support</a
+                    >
+                  </div>
+                  <div class="dropdown-section">
+                    <h4>Take Quiz</h4>
+                    <a
+                      href="https://www.phishingbox.com/phishing-iq-test"
+                      target="_blank"
+                      >Phishingbox</a
+                    >
+                    <a
+                      href="https://www.intradyn.com/phishing-quiz/"
+                      target="_blank"
+                      >Intradyn</a
+                    >
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-actions">
+            <a
+              href="static/assets/Phishing Website Identification.pdf"
+              class="btn-primary"
+              download="phishing-guide"
+            >
+              <i class="fas fa-download"></i> Download Guide
+            </a>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ======= Hero Section ======= -->
+    <section class="usecases-hero">
+      <div class="hero-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+      </div>
+
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-badge glass-card">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Real-World Case Studies</span>
+          </div>
+
+          <h1 class="hero-title">
+            <span class="gradient-text">Major Phishing</span>
+            <br />Attack Case Studies
+          </h1>
+
+          <p class="hero-description">
+            Learn from real-world phishing attacks that caused significant data
+            breaches and understand the importance of cybersecurity vigilance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= Case Studies Section ======= -->
+    <section id="case-studies" class="case-studies-section">
+      <div class="section-container">
+        <div class="cases-grid">
+          <!-- Case Study 1 -->
+          <div class="case-card glass-card" data-aos="fade-up">
+            <div class="case-header">
+              <div class="case-icon danger">
+                <i class="fas fa-envelope-open-text"></i>
+              </div>
+              <div class="case-meta">
+                <span class="case-badge">Email Phishing</span>
+                <h3>John Podesta Email Hack</h3>
+                <span class="case-date">November 2016</span>
+              </div>
+            </div>
+
+            <div class="case-content">
+              <p class="case-description">
+                One of the most notable phishing attacks during the 2016 U.S.
+                election campaign. John Podesta, Hillary Clinton's campaign
+                chairman, fell victim to a sophisticated spear-phishing attack
+                orchestrated by the Russian hacker group "Fancy Bear".
+              </p>
+
+              <div class="case-details">
+                <h4>Attack Method:</h4>
+                <ul>
+                  <li>Fake Google security alert email</li>
+                  <li>
+                    Malicious link redirecting to credential harvesting page
+                  </li>
+                  <li>Social engineering exploiting security concerns</li>
+                </ul>
+
+                <h4>Impact:</h4>
+                <ul>
+                  <li>Complete Gmail account compromise</li>
+                  <li>Thousands of sensitive emails leaked via WikiLeaks</li>
+                  <li>Significant political ramifications</li>
+                </ul>
+              </div>
+
+              <div class="case-stats">
+                <div class="stat-item">
+                  <span class="stat-number">50,000+</span>
+                  <span class="stat-label">Emails Leaked</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">High</span>
+                  <span class="stat-label">Political Impact</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 2 -->
+          <div
+            class="case-card glass-card"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <div class="case-header">
+              <div class="case-icon warning">
+                <i class="fa-solid fa-building"></i>
+              </div>
+              <div class="case-meta">
+                <span class="case-badge">Corporate Breach</span>
+                <h3>BenefitMall Data Breach</h3>
+                <span class="case-date">June - October 2018</span>
+              </div>
+            </div>
+
+            <div class="case-content">
+              <p class="case-description">
+                A major human resources and payroll administration company
+                suffered a significant data breach when employee email
+                credentials were compromised through phishing attacks, exposing
+                sensitive information of numerous clients.
+              </p>
+
+              <div class="case-details">
+                <h4>Compromised Data:</h4>
+                <ul>
+                  <li>Names and email addresses</li>
+                  <li>Birth dates and Social Security numbers</li>
+                  <li>Bank account information</li>
+                  <li>Insurance premium payment details</li>
+                </ul>
+
+                <h4>Business Impact:</h4>
+                <ul>
+                  <li>200,000+ small/medium businesses affected</li>
+                  <li>Network of 20,000+ advisors compromised</li>
+                  <li>Regulatory scrutiny and legal consequences</li>
+                </ul>
+              </div>
+
+              <div class="case-stats">
+                <div class="stat-item">
+                  <span class="stat-number">200K+</span>
+                  <span class="stat-label">Businesses Affected</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">4 Months</span>
+                  <span class="stat-label">Breach Duration</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 3 -->
+          <div
+            class="case-card glass-card"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <div class="case-header">
+              <div class="case-icon critical">
+                <i class="fas fa-film"></i>
+              </div>
+              <div class="case-meta">
+                <span class="case-badge">State-Sponsored</span>
+                <h3>Sony Pictures Attack</h3>
+                <span class="case-date">November 2014</span>
+              </div>
+            </div>
+
+            <div class="case-content">
+              <p class="case-description">
+                A devastating cyberattack on Sony Pictures Entertainment by
+                North Korean government-backed hackers in retaliation for the
+                movie "The Interview". The attack used sophisticated phishing
+                and spear-phishing techniques.
+              </p>
+
+              <div class="case-details">
+                <h4>Attack Vector:</h4>
+                <ul>
+                  <li>Spear-phishing emails with malware</li>
+                  <li>Months of covert network reconnaissance</li>
+                  <li>Employee intimidation and threats</li>
+                </ul>
+
+                <h4>Devastating Impact:</h4>
+                <ul>
+                  <li>Thousands of computers disabled</li>
+                  <li>Confidential data theft and leaks</li>
+                  <li>Estimated $100M+ in damages</li>
+                  <li>International diplomatic incident</li>
+                </ul>
+              </div>
+
+              <div class="case-stats">
+                <div class="stat-item">
+                  <span class="stat-number">$100M+</span>
+                  <span class="stat-label">Estimated Damages</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">Global</span>
+                  <span class="stat-label">Media Coverage</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 4 -->
+          <div
+            class="case-card glass-card"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <div class="case-header">
+              <div class="case-icon warning">
+                <i class="fa-solid fa-hospital"></i>
+              </div>
+              <div class="case-meta">
+                <span class="case-badge">Healthcare Breach</span>
+                <h3>Methodist Hospitals</h3>
+                <span class="case-date">August 2019</span>
+              </div>
+            </div>
+
+            <div class="case-content">
+              <p class="case-description">
+                A healthcare provider in Gary, Indiana suffered a significant
+                data breach when phishing attacks compromised employee email
+                accounts, exposing sensitive patient information and violating
+                HIPAA regulations.
+              </p>
+
+              <div class="case-details">
+                <h4>Exposed Information:</h4>
+                <ul>
+                  <li>Patient names and addresses</li>
+                  <li>Social Security and passport numbers</li>
+                  <li>Health insurance information</li>
+                  <li>Medical treatment records</li>
+                  <li>Bank account numbers</li>
+                </ul>
+
+                <h4>Healthcare Impact:</h4>
+                <ul>
+                  <li>HIPAA compliance violations</li>
+                  <li>Patient trust erosion</li>
+                  <li>Regulatory penalties and legal costs</li>
+                </ul>
+              </div>
+
+              <div class="case-stats">
+                <div class="stat-item">
+                  <span class="stat-number">68,000+</span>
+                  <span class="stat-label">Patients Affected</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">HIPAA</span>
+                  <span class="stat-label">Violation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

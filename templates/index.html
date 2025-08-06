@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>Sus-Detector</title>
+    <meta
+      content="Advanced phishing website detection using machine learning"
+      name="description"
+    />
+    <meta
+      content="phishing detector, security, machine learning, cybersecurity"
+      name="keywords"
+    />
+
+    <!-- Favicons -->
+    <link href="/static/assets/img/suspicious.png" rel="icon" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Enhanced CSS -->
+    <link href="static/style.css" rel="stylesheet" />
+    
+    <style>
+      /* SSL Certificate Styles */
+      .ssl-certificate-section {
+        margin-top: var(--space-xl);
+        padding: var(--space-lg);
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-glass);
+      }
+
+      .ssl-section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-lg);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+      }
+
+      .ssl-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--space-lg);
+      }
+
+      .ssl-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-lg);
+        backdrop-filter: blur(8px);
+      }
+
+      .ssl-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-md);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+      }
+
+      .ssl-info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: var(--space-sm) 0;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .ssl-info-item:last-child {
+        border-bottom: none;
+      }
+
+      .ssl-info-label {
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        margin-right: var(--space-md);
+      }
+
+      .ssl-info-value {
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        text-align: right;
+        word-break: break-all;
+      }
+
+      .ssl-validity-status {
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: var(--radius-sm);
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+      }
+
+      .ssl-validity-status.valid {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-500);
+      }
+
+      .ssl-validity-status.expired {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-500);
+      }
+
+      .ssl-validity-status.invalid {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-500);
+      }
+
+      .ssl-san-list {
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      .ssl-san-item {
+        padding: var(--space-xs) var(--space-sm);
+        margin: var(--space-xs) 0;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+      }
+
+      .ssl-extension-item {
+        margin-bottom: var(--space-sm);
+        padding: var(--space-sm);
+        background: rgba(148, 163, 184, 0.05);
+        border-radius: var(--radius-sm);
+      }
+
+      .ssl-extension-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+      }
+
+      .ssl-extension-critical {
+        display: inline-block;
+        margin-left: var(--space-sm);
+        padding: 2px 6px;
+        background: var(--danger-500);
+        color: white;
+        border-radius: var(--radius-sm);
+        font-size: 0.7rem;
+      }
+
+      .ssl-extension-usages {
+        margin-top: var(--space-xs);
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .ssl-no-cert {
+        text-align: center;
+        padding: var(--space-2xl);
+        color: var(--text-muted);
+      }
+
+      .ssl-no-cert i {
+        font-size: 3rem;
+        margin-bottom: var(--space-md);
+        color: var(--warning-500);
+      }
+
+      /* Loader Styles */
+      .loader {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-xl);
+        text-align: center;
+      }
+
+      .loader.active {
+        display: flex;
+      }
+
+      .loader-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(59, 130, 246, 0.2);
+        border-top: 4px solid var(--primary-500);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: var(--space-md);
+      }
+
+      .loader p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .scanner-form.loading {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .ssl-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .ssl-info-item {
+          flex-direction: column;
+          gap: var(--space-xs);
+        }
+        
+        .ssl-info-value {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Dark/Light Mode Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+      <i class="fas fa-sun" id="themeIcon"></i>
+    </div>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="glass-header">
+      <nav class="navbar">
+        <div class="nav-container">
+          <div class="nav-logo">
+            <h1><a href="{{ url_for('home') }}">Sus-Detector</a></h1>
+          </div>
+
+          <div class="nav-menu" id="navMenu">
+            <ul class="nav-list">
+              <li class="nav-item">
+                <a href="{{ url_for('home') }}" class="nav-link active">Home</a>
+              </li>
+              <li class="nav-item">
+                <a onclick="scrolldiv()" class="nav-link">About</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle"
+                  >Help <i class="fas fa-chevron-down"></i
+                ></a>
+                <div class="dropdown-menu glass-card">
+                  <div class="dropdown-section">
+                    <h4>Report Phishing</h4>
+                    <a
+                      href="https://safebrowsing.google.com/safebrowsing/report_phish/?hl=en"
+                      target="_blank"
+                      >Google Safe Browsing</a
+                    >
+                    <a
+                      href="https://support.google.com/websearch/answer/106318"
+                      target="_blank"
+                      >Google Support</a
+                    >
+                  </div>
+                  <div class="dropdown-section">
+                    <h4>Take Quiz</h4>
+                    <a
+                      href="https://www.phishingbox.com/phishing-iq-test"
+                      target="_blank"
+                      >Phishingbox</a
+                    >
+                    <a
+                      href="https://www.intradyn.com/phishing-quiz/"
+                      target="_blank"
+                      >Intradyn</a
+                    >
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-actions">
+            <a
+              href="static/assets/Phishing Website Identification.pdf"
+              class="btn-primary"
+              download="phishing-guide"
+            >
+              <i class="fas fa-download"></i> Download Guide
+            </a>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero-section">
+      <div class="hero-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+      </div>
+
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-badge glass-card">
+            <i class="fas fa-shield-alt"></i>
+            <span>Advanced AI-Powered Detection</span>
+          </div>
+
+          <h1 class="hero-title">
+            <span class="gradient-text">Detect Phishing Websites</span>
+            <br />Before They Detect You
+          </h1>
+
+          <p class="hero-description">
+            Protect yourself from malicious websites with our AI-powered
+            phishing detection system. Simply enter a URL and get instant
+            security analysis.
+          </p>
+
+          <div class="scanner-container glass-card">
+            <form
+              action="/result"
+              method="POST"
+              class="scanner-form"
+              id="scannerForm"
+              onsubmit="showLoader(event)"
+            >
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-link"></i>
+                </div>
+                <input
+                  type="url"
+                  name="name"
+                  class="url-input"
+                  placeholder="Enter website URL (https://example.com)"
+                  required
+                />
+                <button type="submit" class="scan-btn" id="scanBtn">
+                  <span>Scan Now</span>
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </form>
+
+            <!-- Loader -->
+            <div id="loader" class="loader">
+              <div class="loader-spinner"></div>
+              <p>Analyzing SSL/TLS certificate and security properties...</p>
+            </div>
+
+            {% if error %}
+            <div class="result-container">
+              <div class="result-status danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>{{ error }}</span>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if name %}
+            <div class="result-container">
+              <div class="result-header">
+                <h3>{{ name.url }}</h3>
+              </div>
+              <div
+                class="result-status {{ 'safe' if name.prediction_score == '1' else 'danger' }}"
+              >
+                <i
+                  class="fas {{ 'fa-shield-check' if name.prediction_score == '1' else 'fa-exclamation-triangle' }}"
+                ></i>
+                <span>Website is {{ name.status }}</span>
+              </div>
+              <div class="result-actions">
+                <button
+                  class="btn-result {{ 'btn-safe' if name.prediction_score == '1' else 'btn-danger' }}"
+                  onclick="window.open('{{ name.url }}')"
+                  target="_blank"
+                >
+                  {{ name.message }}
+                </button>
+              </div>
+
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- SSL Certificate Details Section -->
+          {% if cert_info %}
+          <div class="ssl-certificate-section">
+            <h2 class="ssl-section-title">
+              <i class="fas fa-certificate"></i>
+              SSL/TLS Certificate Details
+            </h2>
+            
+            <div class="ssl-grid">
+              <!-- Basic Information -->
+              <div class="ssl-card">
+                <h3 class="ssl-card-title">
+                  <i class="fas fa-info-circle"></i>
+                  Basic Information
+                </h3>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Hostname:</span>
+                  <span class="ssl-info-value">{{ cert_info.hostname }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Port:</span>
+                  <span class="ssl-info-value">{{ cert_info.port }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">TLS Version:</span>
+                  <span class="ssl-info-value">{{ cert_info.tls_version }}</span>
+                </div>
+                {% if cert_info.cipher_suite %}
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Cipher Suite:</span>
+                  <span class="ssl-info-value">{{ cert_info.cipher_suite }}</span>
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Certificate Subject -->
+              {% if cert_info.subject %}
+              <div class="ssl-card">
+                <h3 class="ssl-card-title">
+                  <i class="fas fa-user-tag"></i>
+                  Certificate Subject
+                </h3>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Common Name:</span>
+                  <span class="ssl-info-value">{{ cert_info.subject.common_name }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Organization:</span>
+                  <span class="ssl-info-value">{{ cert_info.subject.organization }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Country:</span>
+                  <span class="ssl-info-value">{{ cert_info.subject.country }}</span>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Certificate Issuer -->
+              {% if cert_info.issuer %}
+              <div class="ssl-card">
+                <h3 class="ssl-card-title">
+                  <i class="fas fa-building"></i>
+                  Certificate Issuer
+                </h3>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Common Name:</span>
+                  <span class="ssl-info-value">{{ cert_info.issuer.common_name }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Organization:</span>
+                  <span class="ssl-info-value">{{ cert_info.issuer.organization }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Country:</span>
+                  <span class="ssl-info-value">{{ cert_info.issuer.country }}</span>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Validity Information -->
+              {% if cert_info.validity %}
+              <div class="ssl-card">
+                <h3 class="ssl-card-title">
+                  <i class="fas fa-calendar-alt"></i>
+                  Validity Information
+                </h3>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Valid From:</span>
+                  <span class="ssl-info-value">{{ cert_info.validity.not_before }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Valid Until:</span>
+                  <span class="ssl-info-value">{{ cert_info.validity.not_after }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Days Until Expiry:</span>
+                  <span class="ssl-info-value">{{ cert_info.validity.days_until_expiry }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Status:</span>
+                  <span class="ssl-info-value">
+                    {% if cert_info.validity.is_valid %}
+                      <span class="ssl-validity-status valid">
+                        <i class="fas fa-check-circle"></i>
+                        Valid
+                      </span>
+                    {% elif cert_info.validity.is_expired %}
+                      <span class="ssl-validity-status expired">
+                        <i class="fas fa-times-circle"></i>
+                        Expired
+                      </span>
+                    {% else %}
+                      <span class="ssl-validity-status invalid">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Not Yet Valid
+                      </span>
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Cryptographic Details -->
+              {% if cert_info.crypto %}
+              <div class="ssl-card">
+                <h3 class="ssl-card-title">
+                  <i class="fas fa-key"></i>
+                  Cryptographic Details
+                </h3>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Public Key Algorithm:</span>
+                  <span class="ssl-info-value">{{ cert_info.crypto.public_key_algorithm }}</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Public Key Size:</span>
+                  <span class="ssl-info-value">{{ cert_info.crypto.public_key_size }} bits</span>
+                </div>
+                <div class="ssl-info-item">
+                  <span class="ssl-info-label">Signature Algorithm:</span>
+                  <span class="ssl-info-value">{{ cert_info.crypto.signature_algorithm }}</span>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Subject Alternative Names -->
+              {% if cert_info.subject_alt_names %}
+              <div class="ssl-card">
+                <h3 class="ssl-card-title">
+                  <i class="fas fa-globe"></i>
+                  Subject Alternative Names
+                </h3>
+                <div class="ssl-san-list">
+                  {% for san in cert_info.subject_alt_names %}
+                  <div class="ssl-san-item">
+                    <strong>{{ san.type }}:</strong> {{ san.value }}
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Certificate Extensions -->
+            {% if cert_info.extensions %}
+            <div class="ssl-card" style="margin-top: var(--space-lg);">
+              <h3 class="ssl-card-title">
+                <i class="fas fa-cog"></i>
+                Certificate Extensions
+              </h3>
+              {% for ext in cert_info.extensions %}
+              <div class="ssl-extension-item">
+                <div class="ssl-extension-name">
+                  {{ ext.name }}
+                  {% if ext.critical %}
+                  <span class="ssl-extension-critical">CRITICAL</span>
+                  {% endif %}
+                </div>
+                {% if ext.key_usages %}
+                <div class="ssl-extension-usages">
+                  <strong>Key Usages:</strong> {{ ext.key_usages | join(', ') }}
+                </div>
+                {% endif %}
+                {% if ext.extended_key_usages %}
+                <div class="ssl-extension-usages">
+                  <strong>Extended Key Usages:</strong> {{ ext.extended_key_usages | join(', ') }}
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Additional Certificate Info -->
+            <div class="ssl-card" style="margin-top: var(--space-lg);">
+              <h3 class="ssl-card-title">
+                <i class="fas fa-file-alt"></i>
+                Additional Information
+              </h3>
+              <div class="ssl-info-item">
+                <span class="ssl-info-label">Serial Number:</span>
+                <span class="ssl-info-value">{{ cert_info.serial_number }}</span>
+              </div>
+              <div class="ssl-info-item">
+                <span class="ssl-info-label">Version:</span>
+                <span class="ssl-info-value">{{ cert_info.version }}</span>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="hero-stats">
+            <div class="stat-item glass-card">
+              <div class="stat-number">97.4%</div>
+              <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-item glass-card">
+              <div class="stat-number">1.1k+</div>
+              <div class="stat-label">URLs Scanned</div>
+            </div>
+            <div class="stat-item glass-card">
+              <div class="stat-number">24/7</div>
+              <div class="stat-label">Protection</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="security-illustration">
+            <div class="shield-container glass-card">
+              <i class="fas fa-shield-alt shield-icon"></i>
+              <div class="pulse-ring"></div>
+              <div class="pulse-ring delay-1"></div>
+              <div class="pulse-ring delay-2"></div>
+            </div>
+            <div class="floating-elements">
+              <div class="float-element glass-card element-1">
+                <i class="fas fa-lock"></i>
+              </div>
+              <div class="float-element glass-card element-2">
+                <i class="fas fa-bug"></i>
+              </div>
+              <div class="float-element glass-card element-3">
+                <i class="fas fa-eye"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-indicator">
+        <div class="scroll-dot"></div>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+    {% if features %}
+    <div class="features-table-container">
+      <h2 class="features-title">Extracted Features</h2>
+      <table class="features-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for name, value in features %}
+          <tr>
+            <td>{{ name }}</td>
+            <td>
+              {% if value == 1 %}
+              <span style="color: green">Legit</span>
+              {% elif value == 0 %}
+              <span style="color: yellow">Suspicious</span>
+              {% elif value == -1 %}
+              <span style="color: red">Unsafe</span>
+              {% else %} {{ value }} {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
+
+    <!-- ======= FAQ Section ======= -->
+    <section id="faq" class="faq-section">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>Frequently Asked Questions</h2>
+          <p>
+            Everything you need to know about phishing and how to protect
+            yourself
+          </p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-item glass-card" data-aos="fade-up">
+            <div class="faq-header">
+              <div class="faq-icon">
+                <i class="fas fa-question-circle"></i>
+              </div>
+              <h3>What is phishing?</h3>
+              <button class="faq-toggle">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>
+                Phishing is a cybercrime in which targets are contacted by
+                email, telephone, or text message by someone posing as a
+                legitimate institution to lure individuals into providing
+                sensitive data such as personally identifiable information,
+                banking and credit card details, and passwords.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="faq-item glass-card"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <div class="faq-header">
+              <div class="faq-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3>Why should I care about phishing?</h3>
+              <button class="faq-toggle">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>
+                Successful phishing attacks can cause financial loss, put your
+                personal information at risk, and compromise your data and
+                systems. The purpose is to collect sensitive information to gain
+                unauthorized access to protected data and networks.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="faq-item glass-card"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <div class="faq-header">
+              <div class="faq-icon">
+                <i class="fas fa-bug"></i>
+              </div>
+              <h3>Types of Phishing Attacks</h3>
+              <button class="faq-toggle">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>
+                <strong>Deceptive Phishing:</strong> Fraudsters impersonate
+                legitimate companies using threats and urgency.
+              </p>
+              <p>
+                <strong>Spear Phishing:</strong> Targeted attacks on specific
+                individuals using researched personal information.
+              </p>
+              <p>
+                <strong>Other techniques:</strong> Email phishing, smishing
+                (SMS), vishing (voice calls), whaling (executives), and
+                malvertising.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="faq-item glass-card"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <div class="faq-header">
+              <div class="faq-icon">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <h3>How to protect yourself?</h3>
+              <button class="faq-toggle">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <ul>
+                <li>
+                  Use strong passwords and avoid sharing personal details on
+                  social media
+                </li>
+                <li>
+                  Verify suspicious emails by contacting the organization
+                  directly
+                </li>
+                <li>Only open attachments from trusted sources</li>
+                <li>Check for typos and grammar errors in communications</li>
+                <li>
+                  Never provide personal information via email or unsolicited
+                  calls
+                </li>
+                <li>Keep your software and antivirus updated</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about-section">
+      <div class="section-container">
+        <div class="about-content">
+          <div class="about-text">
+            <div class="section-header">
+              <h2>About Sus-Detctor</h2>
+            </div>
+
+            <div class="about-description">
+              <p>
+                Sus-Detctor is an innovative project that leverages machine
+                learning algorithms to identify and prevent phishing attacks.
+                Our system analyzes
+                <b
+                  >SSL/TLS Certificates, URL patterns, website content, and
+                  behavioral indicators</b
+                >
+                to provide real-time protection against malicious websites.
+              </p>
+            </div>
+
+            <div class="team-info glass-card">
+              <h3>Development Team</h3>
+              <div class="team-grid">
+                <div class="team-member">
+                  <div class="member-avatar">
+                    <i class="fas fa-user-graduate"></i>
+                  </div>
+                  <div class="member-info">
+                    <h4>Shehabudowllah Rakib</h4>
+                    <span>C213078</span>
+                  </div>
+                </div>
+                <div class="team-member">
+                  <div class="member-avatar">
+                    <i class="fas fa-user-graduate"></i>
+                  </div>
+                  <div class="member-info">
+                    <h4>Md. Asiful Islam</h4>
+                    <span>C213081</span>
+                  </div>
+                </div>
+                <div class="team-member">
+                  <div class="member-avatar">
+                    <i class="fas fa-user-graduate"></i>
+                  </div>
+                  <div class="member-info">
+                    <h4>Kazi Irfanul Karim</h4>
+                    <span>C213094</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="course-info">
+                <h4>Course Information</h4>
+                <p><strong>Course:</strong> CSE-4744 - Computer Security Lab</p>
+                <p>
+                  <strong>Instructor:</strong> Md. Ziaul Haque, Adjunct Faculty,
+                  Dept of CSE, IIUC
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-content glass-card">
+          <div class="footer-brand">
+            <img
+              src="static/assets/img/google.png"
+              alt="Google"
+              class="footer-logo"
+            />
+          </div>
+          <div class="footer-actions">
+            <a
+              href="https://phishingquiz.withgoogle.com/"
+              target="_blank"
+              class="btn-secondary"
+            >
+              Take Google's Phishing Test
+            </a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2024 Sus-Detctor. Computer Security Lab Project - All Rights
+            Reserved
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+      // Theme Toggle
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const body = document.body;
+
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem("theme") || "light";
+      body.setAttribute("data-theme", savedTheme);
+      updateThemeIcon(savedTheme);
+
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = body.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        body.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeIcon(newTheme);
+      });
+
+      function updateThemeIcon(theme) {
+        themeIcon.className = theme === "dark" ? "fas fa-sun" : "fas fa-moon";
+      }
+
+      // Mobile Menu Toggle
+      const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+      const navMenu = document.getElementById("navMenu");
+
+      mobileMenuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        mobileMenuToggle.classList.toggle("active");
+      });
+
+      // FAQ Toggle
+      document.querySelectorAll(".faq-toggle").forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const faqItem = toggle.closest(".faq-item");
+          faqItem.classList.toggle("active");
+        });
+      });
+
+      // Smooth scroll function
+      function scrolldiv() {
+        document.getElementById("about").scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Navbar scroll effect
+      window.addEventListener("scroll", () => {
+        const header = document.getElementById("header");
+        if (window.scrollY > 100) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+
+      // Loader functionality
+      function showLoader(event) {
+        const loader = document.getElementById("loader");
+        const scannerForm = document.getElementById("scannerForm");
+        
+        // Show loader
+        loader.classList.add("active");
+        scannerForm.classList.add("loading");
+        
+        // Don't prevent form submission
+        return true;
+      }
+
+      // Add animation on scroll (simple version)
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      // Observe elements with fade-up effect
+      document.querySelectorAll('[data-aos="fade-up"]').forEach((el) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(50px)";
+        el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>
